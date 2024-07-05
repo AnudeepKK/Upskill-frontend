@@ -44,7 +44,7 @@ const Page = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:4000/fetchSkills', skills);
+      const response = await axios.post('https://upskill-backend-dxbu.onrender.com/fetchSkills', skills);
       console.log('Skills recognized are:', response.data);
       const { data } = response.data;
 
