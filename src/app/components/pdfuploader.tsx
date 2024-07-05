@@ -1,5 +1,5 @@
+"use client";
 // components/PdfUploader.js
-"use client"
 // components/PdfUploader.js
 // components/PdfUploader.js
 // import React, { useState } from 'react';
@@ -62,17 +62,17 @@
 // };
 
 // export default PdfUploader;
-
 import React, { useState } from 'react';
-// @ts-ignore
-import * as pdfjsLib from 'pdfjs-dist/webpack.mjs';
+import axios from 'axios';
 
-const PdfUploader: React.FC<{ onPdfUpload: (data: any) => void }> = ({ onPdfUpload }) => {
+const PdfUploader = ({ onChange }: any) => {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [selectedPdfName, setSelectedPdfName] = useState<string>('');
+  const [selectedPdfName, setSelectedPdfName] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [moduleData, setModuleData] = useState<string[]>([]);
 
   // Handler for file input change
-  const handleFileChange = (event:any) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       setPdfFile(file);
@@ -80,84 +80,81 @@ const PdfUploader: React.FC<{ onPdfUpload: (data: any) => void }> = ({ onPdfUplo
     }
   };
 
-  const handlePdfRead = async () => {
+  // Handler for uploading PDF to backend
+  const handlePdfUpload = async () => {
     if (!pdfFile) return;
 
     try {
-      const fileReader = new FileReader();
-      fileReader.onload = async () => {
-        // @ts-ignore
-        const typedArray = new Uint8Array(fileReader.result);
-        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-        const numPages = pdf.numPages;
+      setUploading(true);
 
-        console.log(`Number of Pages: ${numPages}`);
+      const formData = new FormData();
+      formData.append('file', pdfFile);
 
-        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-          const page = await pdf.getPage(pageNum);
-          const textContent = await page.getTextContent();
-          const textItems = textContent.items.map((item:any) => item.str).join(' ');
+      const response = await axios.post('https://upskillsyllabuscopy.onrender.com/analyze', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-          console.log(`Page ${pageNum}: ${textItems}`);
-        }
-      };
-      fileReader.readAsArrayBuffer(pdfFile);
+      console.log('Upload successful:', response.data);
+      const { pages } = response.data;
+      if (pages && pages.length > 0) {
+        const filteredModules = pages[0].lines.filter((line: { content: string; }) => line.content.startsWith('MODULE:'));
+        setModuleData(filteredModules.map((line: { content: any; }) => line.content));
+        console.log('Filtered Modules:', filteredModules);
+      }
     } catch (error) {
-      console.error('Error reading PDF:', error);
+      console.error('Error uploading PDF:', error);
+    } finally {
+      setUploading(false);
     }
   };
 
-  // // Handler for uploading PDF content to backend
-  // const handlePdfUpload = async () => {
-  //   if (!pdfFile) return;
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('file', pdfFile);
-
-  //     console.log('Uploading PDF...');
-  //     const response = await axios.post('http://your-backend-url/upload-pdf', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data'
-  //       }
-  //     });
-
-  //     console.log('PDF uploaded successfully:', response.data);
-
-  //     // Extract skills and skill names from the uploaded PDF
-  //     const skills = await extractSkillsFromPDF(pdfFile);
-
-  //     // Send skills data to backend
-  //     console.log('Extracted skills:', skills);
-  //     const skillsResponse = await axios.post('http://your-backend-url/extract-skills', { skills });
-
-  //     console.log('Skills extracted and sent to backend:', skillsResponse.data);
-
-  //     onPdfUpload(response.data); // Notify parent component about successful upload
-  //   } catch (error) {
-  //     console.error('Error uploading or extracting PDF:', error);
-  //   }
-  // };
-
   return (
-    <div className="sm:ml-4">
-      {/* File input for selecting PDF */}
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={handleFileChange}
-        className="hidden"
-        id="pdf-upload"
-      />
-      <label htmlFor="pdf-upload" className="cursor-pointer px-4 py-2 border border-gray-300 rounded-md bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none">
-        Upload your syllabus pdf
-      </label>
-
-      {selectedPdfName && <p className="mt-2">Selected PDF: {selectedPdfName}</p>}
-
-      <button onClick={handlePdfRead} disabled={!pdfFile} className="mt-4 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none disabled:opacity-50">
-          Submit PDF
+    <div className="flex flex-col md:flex-row mt-5 items-center justify-center min-h-screen dark:bg-dark bg-gray-50 p-4">
+      {/* Left Side: Upload Form */}
+      <div className="md:w-1/2 md:pr-12 flex flex-col items-center">
+        <h1 className="text-3xl font-bold mb-4 text-center md:text-left">Upload Syllabus Copy</h1>
+        <p className="text-lg mb-4 text-center md:text-left">Upload your syllabus copy to analyze its content.</p>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange}
+          className="hidden"
+          id="pdf-upload"
+        />
+        <label
+          htmlFor="pdf-upload"
+          className="cursor-pointer px-6 py-3 border border-gray-300 rounded-md bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none mb-4"
+        >
+          Select PDF
+        </label>
+        {selectedPdfName && (
+          <p className="text-lg font-medium text-gray-700 mb-4">Selected PDF: {selectedPdfName}</p>
+        )}
+        <button
+          onClick={handlePdfUpload}
+          disabled={!pdfFile || uploading}
+          className={`px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:bg-blue-600 focus:outline-none disabled:opacity-50 ${uploading ? 'cursor-not-allowed' : ''}`}
+        >
+          {uploading ? 'Uploading...' : 'Upload PDF'}
         </button>
+      </div>
+
+      {/* Right Side: Display extracted data */}
+      {moduleData.length > 0 && (
+        <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
+          <h2 className="text-2xl font-bold mb-4">Syllabus Data</h2>
+          <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-bold mb-2">Modules</h3>
+            <ul className="list-disc list-inside text-gray-700">
+              {moduleData.map((module, index) => (
+                <li key={index}>{module}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

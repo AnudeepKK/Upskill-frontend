@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 
+
 const Page = () => {
   const [skills, setSkills] = useState([{ skill: '', skilltolearn: [''] }]);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,6 +63,8 @@ const Page = () => {
   if (typeof window === 'undefined') {
     return null; // Render nothing on the server-side
   }
+
+  
 
   return (
     <div>
@@ -187,9 +190,12 @@ const Page = () => {
                 ))}
               </ul>
             </div>
-          </div>
+            </div>
         )}
       </div>
+
+
+
       <Footer />
     </div>
   );

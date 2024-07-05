@@ -71,18 +71,17 @@
 //   );
 // };
 
-// export default Resume;
-import React, { useState } from 'react';
-import axios from 'axios'; // Import axios for HTTP requests
-import Image from 'next/image'; // Import Image from Next.js
+// export default Resume;import React, { useState } from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 
 const Resume = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [selectedPdfName, setSelectedPdfName] = useState('');
-  const [uploading, setUploading] = useState(false); // State to manage upload status
+  const [uploading, setUploading] = useState(false);
   const [resumeData, setResumeData] = useState(null);
-  const [skills, setSkills] = useState(''); // State to store skills
-  const [projects, setProjects] = useState(''); // State to store skills
+  const [skills, setSkills] = useState('');
+  const [projects, setProjects] = useState('');
 
   // Handler for file input change
   const handleFileChange = (event:any) => {
@@ -98,36 +97,33 @@ const Resume = () => {
     if (!pdfFile) return;
 
     try {
-      setUploading(true); // Set uploading state to true
+      setUploading(true);
 
       const formData = new FormData();
       formData.append('file', pdfFile);
-      console.log(formData)
+      console.log(formData);
 
-      // Replace with your backend endpoint for file upload
-      const response = await axios.post('https://formrecognizer.onrender.com/analyze?file=', formData, {
+      const response = await axios.post('https://upskillsyllabuscopy.onrender.com/analyze1?file=', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
       console.log('Upload successful:', response.data);
-      // Handle success or further processing after upload
       const { documents } = response.data;
       if (documents && documents.length > 0) {
         const { fields } = documents[0];
-        const extractedSkills = fields.Skills || '';
-        const extractedProjects = fields.projcts || ''; // Corrected typo 'projcts' to 'projects'
+        const extractedSkills = fields.skills || '';
+        const extractedProjects = fields.projects || '';
 
         setSkills(extractedSkills);
         setProjects(extractedProjects);
 
-        console.log(projects)
+        console.log(projects);
         console.log(skills);
       }
     } catch (error) {
       console.error('Error uploading PDF:', error);
-      // Handle error condition
     } finally {
       setUploading(false);
     }
@@ -135,51 +131,52 @@ const Resume = () => {
 
   return (
     <div className="flex flex-col md:flex-row mt-5 items-center justify-center min-h-screen dark:bg-dark bg-gray-50 p-4">
-    {/* Left Side: Upload Form */}
-    <div className="md:w-1/2 md:pr-12 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-4 text-center md:text-left">Upload Your Resume</h1>
-      <p className="text-lg mb-4 text-center md:text-left">Add your resume to know whether you are in sync with current world technologies.</p>
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={handleFileChange}
-        className="hidden"
-        id="pdf-upload"
-      />
-      <label
-        htmlFor="pdf-upload"
-        className="cursor-pointer px-6 py-3 border border-gray-300 rounded-md bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none mb-4"
-      >
-        Select PDF
-      </label>
-      {selectedPdfName && (
-        <p className="text-lg font-medium text-gray-700 mb-4">Selected PDF: {selectedPdfName}</p>
-      )}
-      <button
-        onClick={handlePdfUpload}
-        disabled={!pdfFile || uploading}
-        className={`px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:bg-blue-600 focus:outline-none disabled:opacity-50 ${
-          uploading ? 'cursor-not-allowed' : ''
-        }`}
-      >
-        {uploading ? 'Uploading...' : 'Upload PDF'}
-      </button>
-    </div>
-
-    {/* Right Side: Display extracted data */}
-    {skills && (
-      <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
-        <h2 className="text-2xl font-bold mb-4">Resume Data</h2>
-        <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-bold mb-2">Technical Skills</h3>
-          <p className="text-gray-700">{skills}</p>
-
-          <h3 className="text-xl font-bold mt-4 mb-2">Projects</h3>
-          <p className="text-gray-700">{projects}</p>
-        </div>
+      {/* Left Side: Upload Form */}
+      <div className="md:w-1/2 md:pr-12 flex flex-col items-center">
+        <h1 className="text-3xl font-bold mb-4 text-center md:text-left">Upload Your Resume</h1>
+        <p className="text-lg mb-4 text-center md:text-left">Add your resume to know whether you are in sync with current world technologies.</p>
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleFileChange}
+          className="hidden"
+          id="pdf-upload"
+        />
+        <label
+          htmlFor="pdf-upload"
+          className="cursor-pointer px-6 py-3 border border-gray-300 rounded-md bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none mb-4"
+        >
+          Select PDF
+        </label>
+        {selectedPdfName && (
+          <p className="text-lg font-medium text-gray-700 mb-4">Selected PDF: {selectedPdfName}</p>
+        )}
+        <button
+          onClick={handlePdfUpload}
+          disabled={!pdfFile || uploading}
+          className={`px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:bg-blue-600 focus:outline-none disabled:opacity-50 ${
+            uploading ? 'cursor-not-allowed' : ''
+          }`}
+        >
+          {uploading ? 'Uploading...' : 'Upload PDF'}
+        </button>
       </div>
-    )}
-  </div>
+
+      {/* Right Side: Display extracted data */}
+      {skills && (
+        <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
+          <h2 className="text-2xl font-bold mb-4">Resume Data</h2>
+          <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-bold mb-2">Technical Skills</h3>
+            <ul className="list-disc list-inside text-gray-700">
+              {skills.split(',').map((skill, index) => (
+                <li key={index}>{skill.trim()}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

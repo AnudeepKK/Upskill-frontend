@@ -5,6 +5,7 @@ import Navbar from '@/app/components/navbar';
 import Footer from '@/app/components/footer';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import PdfUploader from '@/app/components/pdfuploader';
 
 const Page = () => {
   const [skills, setSkills] = useState([{ skill: '', skilltolearn: [''] }]);
@@ -138,6 +139,13 @@ const Page = () => {
   if (typeof window === 'undefined') {
     return null; 
   }
+
+  const [uploadedData, setUploadedData] = useState(null);
+
+  const handlePdfUpload = (data:any) => {
+    console.log('PDF upload data:', data);
+    setUploadedData(data); // Store the uploaded data in state
+  };
 
   return (
     <div>
@@ -274,6 +282,17 @@ const Page = () => {
           </div>
         )}
       </div>
+      <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">PDF Uploader</h1>
+      <PdfUploader onPdfUpload={handlePdfUpload} />
+
+      {uploadedData && (
+        <div className="mt-4">
+          <h2 className="text-lg font-semibold">Uploaded PDF Content:</h2>
+          <pre className="whitespace-pre-wrap">{JSON.stringify(uploadedData, null, 2)}</pre>
+        </div>
+      )}
+    </div>
       <Footer />
     </div>
   );
