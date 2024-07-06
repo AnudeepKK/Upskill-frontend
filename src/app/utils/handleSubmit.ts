@@ -18,7 +18,7 @@ const handleSubmit = async ({ name, category, positiveChecked, negativeChecked }
   console.log("Feedback:", feedback);
 
   try {
-    const response = await axios.put('http://localhost:4000/skills/update', feedback);
+    const response = await axios.put('https://upskill-backend-dxbu.onrender.com/skills/update', feedback);
     console.log('Feedback saved:', response.data);
     // Optionally handle success message or redirect after successful submission
   } catch (error) {
