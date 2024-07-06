@@ -123,7 +123,7 @@ const onSubmit = async () => {
 
           <div className="w-full p-8 md:w-1/2 flex flex-col items-center justify-center dark:text-white text-gray-700">
             <h4 className="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-              Alumni Feedback
+              Alumni Feedback- Is it Industry Relevant?
             </h4>
             <p className="block mt-1 font-sans text-base antialiased font-normal leading-relaxed dark:text-white text-gray-700">
               We value your feedback! Please fill out the form below.
