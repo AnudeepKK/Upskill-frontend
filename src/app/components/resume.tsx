@@ -1,77 +1,5 @@
 "use client";
-// import React, { useState } from 'react';
-// import * as pdfjsLib from 'pdfjs-dist/webpack.mjs';
 
-// const Resume = () => {
-//   const [pdfFile, setPdfFile] = useState(null);
-//   const [selectedPdfName, setSelectedPdfName] = useState('');
-
-//   // Handler for file input change
-//   const handleFileChange = (event) => {
-//     if (event.target.files && event.target.files.length > 0) {
-//       const file = event.target.files[0];
-//       setPdfFile(file);
-//       setSelectedPdfName(file.name);
-//     }
-//   };
-
-//   // Handler for reading PDF content
-//   const handlePdfRead = async () => {
-//     if (!pdfFile) return;
-
-//     try {
-//       const fileReader = new FileReader();
-//       fileReader.onload = async () => {
-//         const typedArray = new Uint8Array(fileReader.result);
-//         const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-//         const numPages = pdf.numPages;
-
-//         console.log(`Number of Pages: ${numPages}`);
-
-//         for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-//           const page = await pdf.getPage(pageNum);
-//           const textContent = await page.getTextContent();
-//           const textItems = textContent.items.map((item) => item.str).join(' ');
-
-//           console.log(`Page ${pageNum}: ${textItems}`);
-//         }
-//       };
-//       fileReader.readAsArrayBuffer(pdfFile);
-//     } catch (error) {
-//       console.error('Error reading PDF:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-//       <h1 className="text-2xl font-bold mb-4">Upload Your Resume</h1>
-//       <div className="sm:ml-4">
-//         {/* File input for selecting PDF */}
-//         <input
-//           type="file"
-//           accept=".pdf"
-//           onChange={handleFileChange}
-//           className="hidden"
-//           id="pdf-upload"
-//         />
-//         {/* Label for file input */}
-//         <label htmlFor="pdf-upload" className="cursor-pointer px-4 py-2 border border-gray-300 rounded-md bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none">
-//           Select PDF
-//         </label>
-
-//         {/* Display selected PDF file name */}
-//         {selectedPdfName && <p className="mt-2">Selected PDF: {selectedPdfName}</p>}
-
-//         {/* Button to trigger PDF read */}
-//         <button onClick={handlePdfRead} disabled={!pdfFile} className="mt-4 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 focus:outline-none disabled:opacity-50">
-//           Read PDF
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Resume;import React, { useState } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -167,7 +95,7 @@ const Resume = () => {
   <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
     <h2 className="text-2xl font-bold mb-4">Resume Data</h2>
     <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold mb-2">Technical Skills</h3>
+      <h3 className="text-xl font-bold mb-2">Industry Relevant Technical Skills</h3>
       <ul className="list-none text-gray-700">
         {skills.split(',').map((skill, index) => (
           <li key={index} className="flex items-center">
