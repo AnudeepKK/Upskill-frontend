@@ -159,11 +159,11 @@ const onSubmit = async () => {
                 {category === 'tech' && (
                   <>
                     <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-                      Positive Feedback
+                      Industry Relevant
                     </h6>
                     {renderCheckboxes(techOptions, positiveChecked, handlePositiveCheckboxChange)}
                     <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-                      Negative Feedback
+                    Industry Irrelevant
                     </h6>
                     {renderCheckboxes(techOptions, negativeChecked, handleNegativeCheckboxChange)}
                   </>
