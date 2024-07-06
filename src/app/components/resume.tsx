@@ -164,18 +164,27 @@ const Resume = () => {
 
       {/* Right Side: Display extracted data */}
       {skills && (
-        <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
-          <h2 className="text-2xl font-bold mb-4">Resume Data</h2>
-          <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold mb-2">Technical Skills</h3>
-            <ul className="list-disc list-inside text-gray-700">
-              {skills.split(',').map((skill, index) => (
-                <li key={index}>{skill.trim()}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+  <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
+    <h2 className="text-2xl font-bold mb-4">Resume Data</h2>
+    <div className="bg-white dark:bg-dark p-6 rounded-lg shadow-md">
+      <h3 className="text-xl font-bold mb-2">Technical Skills</h3>
+      <ul className="list-none text-gray-700">
+        {skills.split(',').map((skill, index) => (
+          <li key={index} className="flex items-center">
+            <input
+              type="checkbox"
+              id={`skill-${index}`}
+              name={`skill-${index}`}
+              className="mr-2"
+            />
+            <label htmlFor={`skill-${index}`}>{skill.trim()}</label>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
